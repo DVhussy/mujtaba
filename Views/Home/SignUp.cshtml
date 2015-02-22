@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+@model StudentNotifier.Models.Login
+<head>
+    <title>@ViewBag.Title="SignUp"</title>
+    <script src="~/Scripts/jquery-1.8.2.min.js"></script>
+    <script>
+        $(function () {
+            var unable = $('<label id=errorMessage>User Already exist</label>');
+            
+            $('#type').click(function () {
+
+                var v = $('#username').val();
+                $.getJSON("checkUser?expression=" + v, function (result) {
+                    if(result != null)
+                    {
+                        $('#username').after(unable);
+                        alert("aa")
+                        $('form').bind('submit',function (e) {
+                            alert("prevent form");
+                            e.preventDefault(e);
+                        });
+                    }
+                    else
+                    {
+                        $('form').unbind('submit');
+                        $('#errorMessage').remove();
+                    }
+                });
+            });
+            $('#check').click(function () {
+
+                var v = $('#username').val();
+                $.getJSON("checkUser?expression=" + v, function (result) {
+                    if (result != null) {
+                        $('#username').after(unable);
+                        $('form').bind('submit', function (e) {
+                            alert("prevent form");
+                            e.preventDefault(e);
+                        });
+                    }
+                    else {
+                        $('form').unbind('submit');
+                        $('#errorMessage').remove();
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+
+        <fieldset>
+            <legend>SignUp</legend>
+
+            <div class="editor-label">
+                <div style="width:200px;float:left">
+                    @Html.LabelFor(model => model.username)
+                </div>
+                @Html.TextBoxFor(model => model.username)
+                @Html.ValidationMessageFor(model => model.username)
+            </div>
+            <div class="editor-label">
+                <div style="width:200px;float:left">
+                    @Html.LabelFor(model => model.FullName)
+                </div>
+                    @Html.TextBoxFor(model => model.FullName)
+                    @Html.ValidationMessageFor(model => model.FullName)
+                </div>
+
+            <div class="editor-label">
+                <div style="width:200px;float:left">
+                    @Html.LabelFor(model => model.password)
+                </div>
+                    @Html.PasswordFor(model => model.password)
+                    @Html.ValidationMessageFor(model => model.password)
+                </div>
+            <div class="editor-label">
+                <div style="width:200px;float:left">
+                    @Html.Label("Confirmed Password")
+                    </div>
+                    @Html.PasswordFor(model => model.password)
+                    @Html.ValidationMessageFor(model => model.password)
+                </div>
+
+            <div class="editor-label">
+                @Html.LabelFor(model => model.type)
+                @Html.RadioButtonFor(model => model.type, "Student")Student
+            @Html.RadioButtonFor(model => model.type, "Teacher")Teacher
+            </div>
+            <div>
+                <select id="semester" name="semester">
+                    <option value="0">-Select Semester-</option>
+                    <option value="1">Semester 1</option>
+                    <option value="2">Semester 2</option>
+                    <option value="3">Semester 3</option>
+                    <option value="4">Semester 4</option>
+                    <option value="5">Semester 5</option>
+                    <option value="6">Semester 6</option>
+                    <option value="7">Semester 7</option>
+                    <option value="8">Semester 8</option>
+                </select>
+            </div>
+            <p>
+                <input type="submit" id="check"value="Create" />
+            </p>
+        </fieldset>
+    }
+
+    <div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>
+
+</body>
+</html>
